@@ -65,7 +65,7 @@ class UserControllerTest extends TestCase
             'email' => 'john@example.com',
         ];
 
-        $newUser = new User(1, 'John Doe', 'john@example.com', 0, false);
+        $newUser = new User(1, 'John Doe', 'john@example.com', 0, null);
 
         $this->mockRequest
             ->expects($this->once())

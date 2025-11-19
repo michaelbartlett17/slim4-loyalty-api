@@ -24,7 +24,7 @@ use ReflectionClass;
  *
  * ## Soft Deletes
  * To enable soft deletes, set `$softDeletes = true` in your repository.
- * Your database table MUST have a `deleted` column (TINYINT or BOOLEAN, default 0).
+ * Your database table MUST have a `deleted_at` column (TIMESTAMP).
  * When soft deletes are enabled, the `delete()` method will set `deleted = 1`
  * instead of removing records.
  *
@@ -49,7 +49,7 @@ abstract class Repository
     /** @var string[] Fields allowed for insert/update operations */
     protected array $fillableFields = [];
 
-    /** @var bool When true `delete()` performs a soft-delete by setting `deleted = 1` */
+    /** @var bool When true `delete()` performs a soft-delete by setting `deleted_at = date()` */
     protected bool $softDeletes = false;
 
     /** @var bool When false delete operations are forbidden and will throw */
@@ -134,6 +134,7 @@ abstract class Repository
             $params = array_merge($params, $paginationParams);
         }
 
+        // echo $sql;
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -216,7 +217,7 @@ abstract class Repository
         $sql = '';
 
         if ($this->softDeletes) {
-            $sql = "UPDATE {$this->tableName} SET `deleted` = 1";
+            $sql = "UPDATE {$this->tableName} SET `deleted_at` = NOW()";
         } else {
             $sql = "DELETE FROM {$this->tableName}";
         }
@@ -245,10 +246,14 @@ abstract class Repository
         $params = [];
 
         foreach ($filters as $i => $filter) {
+            $isNullOperator = $filter->isNullOperator();
             $value = $this->castValue($filter->property, $filter->value);
-            $paramKey = ":f$i";
+            $paramKey = $isNullOperator ? '' : ":f$i";
             $sqlParts[] = $this->camelToSnake($filter->property) . " {$filter->operator} $paramKey";
-            $params[$paramKey] = $value;
+
+            if (!$isNullOperator) {
+                $params[$paramKey] = $value;
+            }
         }
 
         return [implode(' AND ', $sqlParts), $params];

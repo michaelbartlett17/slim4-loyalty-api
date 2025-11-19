@@ -69,8 +69,8 @@ class User extends Model
         }
     }
 
-    /** @var bool Soft-delete flag */
-    public bool $deleted;
+    /** @var bool Soft-delete timestamp */
+    public ?string $deletedAt;
 
     /**
      * Create a new User model.
@@ -79,19 +79,19 @@ class User extends Model
      * @param string $name          Display name.
      * @param string $email         Email address.
      * @param int    $pointsBalance Initial points (defaults to 0).
-     * @param bool   $deleted       Soft-delete flag (defaults to false).
+     * @param string $deletedAt     Soft-delete timestamp
      */
     public function __construct(
         int $id,
         string $name,
         string $email,
         int $pointsBalance = 0,
-        bool $deleted = false,
+        ?string $deletedAt = null,
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->email = $email;
         $this->pointsBalance = $pointsBalance;
-        $this->deleted = $deleted;
+        $this->deletedAt = $deletedAt;
     }
 }

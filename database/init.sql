@@ -1,9 +1,10 @@
 CREATE TABLE users(
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
-    `email` VARCHAR(255) NOT NULL UNIQUE,
+    `email` VARCHAR(255) NOT NULL,
     `points_balance` INT NOT NULL DEFAULT(0),
-    `deleted` BOOLEAN NOT NULL DEFAULT(0)
+    `deleted_at` TIMESTAMP NULL,
+    UNIQUE INDEX `unique_email_deleted_at` (email, (COALESCE(deleted_at, "1000-01-01")))
 );
 
 CREATE TABLE transactions(

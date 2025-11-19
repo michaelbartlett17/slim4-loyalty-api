@@ -64,7 +64,7 @@ class UserServiceTest extends TestCase
      */
     public function testCreateSuccess(): void
     {
-        $expectedUser = new User(1, 'John Doe', 'john@example.com', 0, false);
+        $expectedUser = new User(1, 'John Doe', 'john@example.com', 0, null);
 
         $this->mockUserRepository
             ->expects($this->once())
@@ -153,7 +153,7 @@ class UserServiceTest extends TestCase
      */
     public function testEarnPointsSuccess(): void
     {
-        $user = new User(1, 'John Doe', 'john@example.com', 50, false);
+        $user = new User(1, 'John Doe', 'john@example.com', 50, null);
 
         $this->mockUserRepository
             ->expects($this->once())
@@ -246,7 +246,7 @@ class UserServiceTest extends TestCase
      */
     public function testEarnPointsRollbackOnError(): void
     {
-        $user = new User(1, 'John Doe', 'john@example.com', 50, false);
+        $user = new User(1, 'John Doe', 'john@example.com', 50, null);
 
         $this->mockUserRepository
             ->expects($this->once())
@@ -285,7 +285,7 @@ class UserServiceTest extends TestCase
      */
     public function testRedeemPointsSuccess(): void
     {
-        $user = new User(1, 'John Doe', 'john@example.com', 100, false);
+        $user = new User(1, 'John Doe', 'john@example.com', 100, null);
 
         $this->mockUserRepository
             ->expects($this->once())
@@ -349,7 +349,7 @@ class UserServiceTest extends TestCase
      */
     public function testRedeemPointsInsufficientBalance(): void
     {
-        $user = new User(1, 'John Doe', 'john@example.com', 30, false);
+        $user = new User(1, 'John Doe', 'john@example.com', 30, null);
 
         $this->mockUserRepository
             ->expects($this->once())
@@ -399,7 +399,7 @@ class UserServiceTest extends TestCase
      */
     public function testRedeemPointsRollbackOnError(): void
     {
-        $user = new User(1, 'John Doe', 'john@example.com', 100, false);
+        $user = new User(1, 'John Doe', 'john@example.com', 100, null);
 
         $this->mockUserRepository
             ->expects($this->once())
@@ -438,7 +438,7 @@ class UserServiceTest extends TestCase
      */
     public function testRedeemPointsExactBalance(): void
     {
-        $user = new User(1, 'John Doe', 'john@example.com', 100, false);
+        $user = new User(1, 'John Doe', 'john@example.com', 100, null);
 
         $this->mockUserRepository
             ->expects($this->once())
