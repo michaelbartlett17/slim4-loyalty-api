@@ -116,7 +116,11 @@ class Filter
             'params' => !empty($propertyStr) ? [$propertyStr => $this->value] : [],
         ];
     }
-
+    /**
+     * Helper function to determine if the operator is 'is null' or 'is not null' (case insensitive)
+     * 
+     * @return bool true if the operator is 'is null' or 'is not null'
+     */
     public function isNullOperator(): bool
     {
         return in_array($this->operator, ['is null', 'is not null', 'IS NULL', 'IS NOT NULL']);
