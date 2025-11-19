@@ -62,7 +62,7 @@ class UserService
         $this->transactionRepository = new TransactionRepository($this->dbConnection);
 
         $this->defaultFilters = [
-            new Filter(User::class, 'deleted', false),
+            new Filter(User::class, 'deletedAt', null, 'is null'),
         ];
     }
 
@@ -124,7 +124,7 @@ class UserService
      */
     public function delete(Filter ...$filters): int
     {
-        $deletedCount = $this->userRepository->delete(...$filters);
+        $deletedCount = $this->userRepository->delete(...[...$filters, ...$this->defaultFilters]);
 
         if ($deletedCount === 0) {
             throw new UserNotFoundException('No user found for the provided filter(s).');
@@ -156,7 +156,7 @@ class UserService
         }
 
         /** @var User $user */
-        $user = $this->userRepository->find([], new Filter(User::class, 'id', $userId));
+        $user = $this->userRepository->find([], new Filter(User::class, 'id', $userId), ...$this->defaultFilters);
 
         if (!$user) {
             throw new UserNotFoundException("User not found for id {$userId}");
@@ -208,7 +208,7 @@ class UserService
         }
 
         /** @var User $user */
-        $user = $this->userRepository->find([], new Filter(User::class, 'id', $userId));
+        $user = $this->userRepository->find([], new Filter(User::class, 'id', $userId), ...$this->defaultFilters);
 
         if (!$user) {
             throw new UserNotFoundException("User not found for id {$userId}");
