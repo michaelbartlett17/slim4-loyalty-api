@@ -63,7 +63,7 @@ class Filter
      */
     public string $operator {
         set(string $value) {
-            if (DataValidator::validateValue(ValidatorRule::IsOneOf, ['=', '!=', '<>', '>', '<', '>=', '<='], $value) !== null) {
+            if (DataValidator::validateValue(ValidatorRule::IsOneOf, ['=', '!=', '<>', '>', '<', '>=', '<=', 'is null', 'is not null', 'IS NULL', 'IS NOT NULL'], $value) !== null) {
                 throw new ValueError('The operator is not a valid sql comparison operator');
             }
             $this->operator = $value;
@@ -106,10 +106,19 @@ class Filter
      */
     public function toSql(): array
     {
+        $propertyStr = ":{$this->property}";
         $column = strtolower(preg_replace('/[A-Z]/', '_$0', $this->property));
+        if ($this->isNullOperator()) {
+            $propertyStr = '';
+        }
         return [
-            'sql'    => "{$column} {$this->operator} :{$this->property}",
-            'params' => [":{$this->property}" => $this->value],
+            'sql'    => "{$column} {$this->operator} {$propertyStr}",
+            'params' => !empty($propertyStr) ? [$propertyStr => $this->value] : [],
         ];
+    }
+
+    public function isNullOperator(): bool
+    {
+        return in_array($this->operator, ['is null', 'is not null', 'IS NULL', 'IS NOT NULL']);
     }
 }
