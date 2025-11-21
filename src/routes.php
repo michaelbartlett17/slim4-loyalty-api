@@ -30,7 +30,6 @@ return function (App $app) {
                     'offset' => [
                         ValidatorRule::CanCast->value => ValidatorType::Integer,
                         ValidatorRule::Min->value     => 1,
-                        ValidatorRule::Max->value     => 100,
                     ],
                 ],
             ]));
